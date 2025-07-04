@@ -6,14 +6,14 @@
 /*   By: mfaure <mfaure@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:48:18 by mfaure            #+#    #+#             */
-/*   Updated: 2025/06/25 17:27:56 by mfaure           ###   ########.fr       */
+/*   Updated: 2025/07/04 18:48:29 by mfaure           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdlib.h>
 
-static int	ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
 	int	i;
 
