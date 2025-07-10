@@ -6,12 +6,17 @@
 /*   By: mfaure <mfaure@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:48:18 by mfaure            #+#    #+#             */
-/*   Updated: 2025/07/04 18:48:29 by mfaure           ###   ########.fr       */
+/*   Updated: 2025/07/04 16:08:55 by mfaure           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 int	ft_strlen(const char *str)
 {

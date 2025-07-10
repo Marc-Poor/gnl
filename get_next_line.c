@@ -6,12 +6,12 @@
 /*   By: mfaure <mfaure@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:47:44 by mfaure            #+#    #+#             */
-/*   Updated: 2025/07/04 18:48:06 by mfaure           ###   ########.fr       */
+/*   Updated: 2025/07/10 17:38:40 by mfaure           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include <fcntl.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -39,6 +39,8 @@ int	find_limb(char *str)
 	limb = 0;
 	while (str[limb] != '\n' && str[limb] != '\0')
 		limb++;
+	if (str[limb] == '\n')
+		limb++;
 	return (limb);
 }
 
@@ -53,11 +55,11 @@ char	*amputate_str(char *str)
 	limb = find_limb(str);
 	if (limb == strlen)
 		return (NULL);
-	keeper = malloc(sizeof(char) * (strlen - limb));
+	keeper = malloc(sizeof(char) * (strlen - limb) + 1);
 	i = 0;
 	while (str[limb + i] != '\0')
 	{
-		keeper[i] = str[limb + i + 1];
+		keeper[i] = str[limb + i];
 		i++;
 	}
 	keeper[i] = '\0';
@@ -71,26 +73,70 @@ char	*get_next_line(int fd)
 	static char	*keeper;
 	int			size;
 	int			count;
+	char *temp2;
 
+	if (fd < 0 || BUFFER_SIZE < 0)
+		return (NULL);
 	size = 1;
-	str = "";
-	buffer = NULL;
-	str = ft_strjoin(str, keeper);
-	if (str == NULL)
-		str = "";
-	count = ft_strlen(str);
-	while (find_in_str(str) > 0 && size != 0)
-	{
-		size = read(fd, buffer, BUFFER_SIZE);
-		count += size;
-		if (size == 0)
-			break ;
-		buffer[BUFFER_SIZE] = '\0';
-		str = ft_strjoin(str, buffer);
+	// str = "";
+	str = malloc(1);
+	str[0] = '\0';
+	buffer = malloc((sizeof(char) * BUFFER_SIZE) + 1);
+	if (keeper) {
+		temp2 = ft_strjoin(str, keeper);
+		free(str);
+		str = temp2;
+		free(keeper);
 	}
-	str[count] = '\0';
+	count = ft_strlen(str);
+	size = read(fd, buffer, BUFFER_SIZE);
+	if (size == -1) {
+		free(buffer);
+		free(str);
+		return NULL;
+	}
+	while (size > 0)
+	{
+		buffer[size] = '\0';
+		count += size;
+		char *temp = ft_strjoin(str, buffer);
+		// printf("count %i\n", count);
+		free(str);
+		str = temp;
+		if (find_in_str(str) == -1)
+			break ;
+		size = read(fd, buffer, BUFFER_SIZE);
+		if (size == -1) {
+			free(buffer);
+			free(str);
+			return NULL;
+		}
+	}
+	// while (find_in_str(str) > 0 && size != 0)
+	// {
+	// 	size = read(fd, buffer, BUFFER_SIZE);
+	// 	// if (size == 0 && keeper[0] == '\0')
+	// 	// 	return NULL;
+	// 	count += size;
+	// 	buffer[size] = '\0';
+	// 	char *temp = ft_strjoin(str, buffer);
+	// 	printf("count %i\n", count);
+	// 	free(str);
+	// 	str = temp;
+	// }
+	free(buffer);
+	// str[count] = '\0';
+	if (size == 0 && str[0] == '\0') {
+			free(str);
+			return NULL;
+	}
 	keeper = amputate_str(str);
 	str[find_limb(str)] = '\0';
+	// if (size == 0 && str[0] == '\0') {
+	// 		free(buffer);
+	// 		free(str);
+	// 		return NULL;
+	// }
 	return (str);
 }
 
@@ -101,9 +147,25 @@ int	main(int ac, char **av)
 	if (ac == 1)
 		return (0);
 	fd = open(av[1], S_IRUSR);
-	printf("%s\n", get_next_line(fd));
-	printf("%s\n", get_next_line(fd));
-	return (0);
+	
+	char *test = get_next_line(fd);
+	printf("%s\n", test);
+	free(test);
+	// test = get_next_line(fd);
+	// printf("%s\n", test);
+	// free(test);
+	
+	// printf("%s\n", get_next_line(fd)); 
+	//char *test = get_next_line(fd);
+	//while (test)
+	//{
+	//	printf("'%s'", test);
+	//	free(test);
+	//	test = get_next_line(fd);
+	//}
+	//return (0);
 }
 
 	// printf("%i\n", strlen - limb);
+// if (keeper == NULL)
+// 		strdup("");
