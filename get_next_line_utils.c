@@ -6,7 +6,7 @@
 /*   By: mfaure <mfaure@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:48:18 by mfaure            #+#    #+#             */
-/*   Updated: 2025/07/04 16:08:55 by mfaure           ###   ########.fr       */
+/*   Updated: 2025/07/10 18:37:57 by mfaure           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,24 @@ int	ft_strlen(const char *str)
 	while (str[i] != '\0')
 		i++;
 	return (i);
+}
+
+char	*ft_strdup(char *src)
+{
+	char	*dup;
+	int		i;
+
+	dup = malloc(sizeof(char) * ft_strlen(src) + 1);
+	i = 0;
+	if (dup == NULL)
+		return (NULL);
+	while (src[i] != '\0')
+	{
+		dup[i] = src[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
 
 char	*fill_up_str(int size1, char const *s1, char *str)
